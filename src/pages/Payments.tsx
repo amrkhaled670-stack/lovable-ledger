@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { formatCurrency } from "@/lib/currency";
 
 export default function Payments() {
   const { user } = useAuth();
@@ -69,11 +70,11 @@ export default function Payments() {
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" />Record Payment</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg">
               <DialogHeader><DialogTitle>Record Payment</DialogTitle></DialogHeader>
               <div className="grid gap-3 py-2">
                 <div><Label>Payment # *</Label><Input value={form.payment_number} onChange={(e) => setForm({ ...form, payment_number: e.target.value })} placeholder="PAY-001" /></div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>Amount *</Label><Input type="number" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} /></div>
                   <div><Label>Date</Label><Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
                 </div>
@@ -103,13 +104,13 @@ export default function Payments() {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm min-w-[500px]">
                   <thead>
                     <tr className="border-b bg-muted/50">
                       <th className="text-start p-3 font-medium text-muted-foreground">Payment #</th>
-                      <th className="text-start p-3 font-medium text-muted-foreground">Date</th>
-                      <th className="text-start p-3 font-medium text-muted-foreground">Reference</th>
-                      <th className="text-start p-3 font-medium text-muted-foreground">Customer</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground hidden sm:table-cell">Date</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground hidden md:table-cell">Reference</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground hidden md:table-cell">Customer</th>
                       <th className="text-start p-3 font-medium text-muted-foreground">Method</th>
                       <th className="text-end p-3 font-medium text-muted-foreground">Amount</th>
                     </tr>
@@ -118,11 +119,11 @@ export default function Payments() {
                     {filtered.map((pay) => (
                       <tr key={pay.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono text-xs font-semibold">{pay.payment_number}</td>
-                        <td className="p-3 font-mono text-xs text-muted-foreground">{pay.date}</td>
-                        <td className="p-3 text-xs">{pay.reference || "—"}</td>
-                        <td className="p-3">{(pay.customers as any)?.name || "—"}</td>
+                        <td className="p-3 font-mono text-xs text-muted-foreground hidden sm:table-cell">{pay.date}</td>
+                        <td className="p-3 text-xs hidden md:table-cell">{pay.reference || "—"}</td>
+                        <td className="p-3 hidden md:table-cell">{(pay.customers as any)?.name || "—"}</td>
                         <td className="p-3 text-muted-foreground capitalize">{pay.method?.replace("_", " ")}</td>
-                        <td className="p-3 text-end font-mono font-medium">${pay.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
+                        <td className="p-3 text-end font-mono font-medium">{formatCurrency(pay.amount)}</td>
                       </tr>
                     ))}
                     {filtered.length === 0 && (

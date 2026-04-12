@@ -1,20 +1,30 @@
 import { AppLayout } from "@/components/AppLayout";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-
-const ledgerEntries = [
-  { date: "2026-04-08", ref: "JE-001", description: "Office Supplies", account: "Office Expenses", debit: 450.00, credit: 0, balance: 5200.00 },
-  { date: "2026-04-08", ref: "JE-001", description: "Office Supplies", account: "Cash", debit: 0, credit: 450.00, balance: 89450.00 },
-  { date: "2026-04-07", ref: "JE-002", description: "Client Payment", account: "Cash", debit: 12500.00, credit: 0, balance: 89900.00 },
-  { date: "2026-04-07", ref: "JE-002", description: "Client Payment", account: "Accounts Receivable", debit: 0, credit: 12500.00, balance: 34200.00 },
-  { date: "2026-04-06", ref: "JE-003", description: "Rent Payment", account: "Rent Expense", debit: 3200.00, credit: 0, balance: 38400.00 },
-  { date: "2026-04-06", ref: "JE-003", description: "Rent Payment", account: "Cash", debit: 0, credit: 3200.00, balance: 77400.00 },
-  { date: "2026-04-05", ref: "JE-004", description: "Service Revenue", account: "Accounts Receivable", debit: 8750.00, credit: 0, balance: 46700.00 },
-  { date: "2026-04-05", ref: "JE-004", description: "Service Revenue", account: "Service Revenue", debit: 0, credit: 8750.00, balance: 124580.00 },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { formatCurrency } from "@/lib/currency";
 
 export default function GeneralLedger() {
+  const { user } = useAuth();
+
+  const { data: lines = [], isLoading } = useQuery({
+    queryKey: ["general_ledger"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("journal_entry_lines")
+        .select("*, journal_entries(entry_number, date, description), accounts(name)")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
   return (
     <AppLayout>
       <PageHeader title="General Ledger" description="Complete record of all financial transactions" />
@@ -22,30 +32,36 @@ export default function GeneralLedger() {
         <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[600px]">
                 <thead>
                   <tr className="border-b bg-muted/50">
                     <th className="text-left p-3 font-medium text-muted-foreground">Date</th>
                     <th className="text-left p-3 font-medium text-muted-foreground">Ref</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Description</th>
+                    <th className="text-left p-3 font-medium text-muted-foreground hidden sm:table-cell">Description</th>
                     <th className="text-left p-3 font-medium text-muted-foreground">Account</th>
                     <th className="text-right p-3 font-medium text-muted-foreground">Debit</th>
                     <th className="text-right p-3 font-medium text-muted-foreground">Credit</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Balance</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ledgerEntries.map((entry, i) => (
-                    <tr key={i} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                      <td className="p-3 font-mono text-xs text-muted-foreground">{entry.date}</td>
-                      <td className="p-3 font-mono text-xs font-semibold">{entry.ref}</td>
-                      <td className="p-3">{entry.description}</td>
-                      <td className="p-3 text-muted-foreground">{entry.account}</td>
-                      <td className="p-3 text-right font-mono">{entry.debit > 0 ? `$${entry.debit.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : '—'}</td>
-                      <td className="p-3 text-right font-mono">{entry.credit > 0 ? `$${entry.credit.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : '—'}</td>
-                      <td className="p-3 text-right font-mono font-medium">${entry.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                  ))}
+                  {isLoading ? (
+                    Array.from({ length: 5 }).map((_, i) => (
+                      <tr key={i} className="border-b"><td colSpan={6} className="p-3"><Skeleton className="h-5 w-full" /></td></tr>
+                    ))
+                  ) : lines.length === 0 ? (
+                    <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No ledger entries yet. Create journal entries to populate.</td></tr>
+                  ) : (
+                    lines.map((line) => (
+                      <tr key={line.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                        <td className="p-3 font-mono text-xs text-muted-foreground">{(line.journal_entries as any)?.date}</td>
+                        <td className="p-3 font-mono text-xs font-semibold">{(line.journal_entries as any)?.entry_number}</td>
+                        <td className="p-3 hidden sm:table-cell">{(line.journal_entries as any)?.description || "—"}</td>
+                        <td className="p-3 text-muted-foreground">{(line.accounts as any)?.name || "—"}</td>
+                        <td className="p-3 text-right font-mono">{(line.debit ?? 0) > 0 ? formatCurrency(line.debit ?? 0) : "—"}</td>
+                        <td className="p-3 text-right font-mono">{(line.credit ?? 0) > 0 ? formatCurrency(line.credit ?? 0) : "—"}</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

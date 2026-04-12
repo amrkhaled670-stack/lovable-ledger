@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { formatCurrency } from "@/lib/currency";
 
 export default function Expenses() {
   const { t } = useTranslation();
@@ -68,11 +69,11 @@ export default function Expenses() {
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("expenses.addExpense")}</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg">
               <DialogHeader><DialogTitle>{t("expenses.addExpense")}</DialogTitle></DialogHeader>
               <div className="grid gap-3 py-2">
                 <div><Label>{t("expenses.description_label")} *</Label><Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>{t("expenses.amount")} *</Label><Input type="number" step="0.01" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} /></div>
                   <div><Label>{t("expenses.date")}</Label><Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
                 </div>
@@ -90,12 +91,12 @@ export default function Expenses() {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm min-w-[400px]">
                   <thead>
                     <tr className="border-b bg-muted/50">
                       <th className="text-start p-3 font-medium text-muted-foreground">{t("expenses.date")}</th>
                       <th className="text-start p-3 font-medium text-muted-foreground">{t("expenses.description_label")}</th>
-                      <th className="text-start p-3 font-medium text-muted-foreground">{t("expenses.category")}</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground hidden sm:table-cell">{t("expenses.category")}</th>
                       <th className="text-end p-3 font-medium text-muted-foreground">{t("expenses.amount")}</th>
                     </tr>
                   </thead>
@@ -104,12 +105,12 @@ export default function Expenses() {
                       <tr key={e.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono text-xs text-muted-foreground">{e.date}</td>
                         <td className="p-3">{e.description}</td>
-                        <td className="p-3">
+                        <td className="p-3 hidden sm:table-cell">
                           {(e.expense_categories as any)?.name ? (
                             <Badge variant="secondary">{(e.expense_categories as any).name}</Badge>
                           ) : <span className="text-muted-foreground">—</span>}
                         </td>
-                        <td className="p-3 text-end font-mono font-medium">${e.amount.toFixed(2)}</td>
+                        <td className="p-3 text-end font-mono font-medium">{formatCurrency(e.amount)}</td>
                       </tr>
                     ))}
                     {filtered.length === 0 && (

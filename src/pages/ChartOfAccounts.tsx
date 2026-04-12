@@ -15,6 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatCurrency } from "@/lib/currency";
 
 const typeColors: Record<string, string> = {
   asset: "bg-primary/10 text-primary",
@@ -50,10 +51,7 @@ export default function ChartOfAccounts() {
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["accounts"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("accounts")
-        .select("*")
-        .order("code");
+      const { data, error } = await supabase.from("accounts").select("*").order("code");
       if (error) throw error;
       return data;
     },
@@ -93,14 +91,14 @@ export default function ChartOfAccounts() {
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" />Add Account</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg">
               <DialogHeader><DialogTitle>New Account</DialogTitle></DialogHeader>
               <div className="grid gap-4 py-2">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>Code</Label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="1000" /></div>
                   <div><Label>Name</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Cash" /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <Label>Type</Label>
                     <Select value={form.type} onValueChange={v => setForm(f => ({ ...f, type: v, sub_type: "" }))}>
@@ -129,14 +127,14 @@ export default function ChartOfAccounts() {
         <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[500px]">
                 <thead>
                   <tr className="border-b bg-muted/50">
                     <th className="text-left p-3 font-medium text-muted-foreground">Code</th>
                     <th className="text-left p-3 font-medium text-muted-foreground">Account Name</th>
                     <th className="text-left p-3 font-medium text-muted-foreground">Type</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Subtype</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Normal</th>
+                    <th className="text-left p-3 font-medium text-muted-foreground hidden sm:table-cell">Subtype</th>
+                    <th className="text-left p-3 font-medium text-muted-foreground hidden md:table-cell">Normal</th>
                     <th className="text-right p-3 font-medium text-muted-foreground">Balance</th>
                   </tr>
                 </thead>
@@ -155,10 +153,10 @@ export default function ChartOfAccounts() {
                         <td className="p-3">
                           <Badge variant="secondary" className={typeColors[acc.type] || ""}>{typeLabels[acc.type] || acc.type}</Badge>
                         </td>
-                        <td className="p-3 text-muted-foreground">{acc.sub_type || "—"}</td>
-                        <td className="p-3 text-muted-foreground">{getNormalSide(acc.type)}</td>
+                        <td className="p-3 text-muted-foreground hidden sm:table-cell">{acc.sub_type || "—"}</td>
+                        <td className="p-3 text-muted-foreground hidden md:table-cell">{getNormalSide(acc.type)}</td>
                         <td className="p-3 text-right font-mono font-medium">
-                          ${(acc.balance ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                          {formatCurrency(acc.balance ?? 0)}
                         </td>
                       </tr>
                     ))
