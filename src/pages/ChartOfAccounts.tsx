@@ -17,27 +17,35 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const typeColors: Record<string, string> = {
-  Asset: "bg-primary/10 text-primary",
-  Liability: "bg-destructive/10 text-destructive",
-  Equity: "bg-accent/10 text-accent",
-  Revenue: "bg-success/10 text-success",
-  Expense: "bg-warning/10 text-warning",
+  asset: "bg-primary/10 text-primary",
+  liability: "bg-destructive/10 text-destructive",
+  equity: "bg-accent/10 text-accent",
+  revenue: "bg-success/10 text-success",
+  expense: "bg-warning/10 text-warning",
 };
 
-const accountTypes = ["Asset", "Liability", "Equity", "Revenue", "Expense"];
+const typeLabels: Record<string, string> = {
+  asset: "Asset",
+  liability: "Liability",
+  equity: "Equity",
+  revenue: "Revenue",
+  expense: "Expense",
+};
+
+const accountTypes = ["asset", "liability", "equity", "revenue", "expense"];
 const subTypes: Record<string, string[]> = {
-  Asset: ["Current Asset", "Fixed Asset", "Other Asset"],
-  Liability: ["Current Liability", "Long-term Liability"],
-  Equity: ["Equity", "Retained Earnings"],
-  Revenue: ["Operating Revenue", "Other Revenue"],
-  Expense: ["Operating Expense", "Cost of Goods Sold", "Other Expense"],
+  asset: ["Current Asset", "Fixed Asset", "Other Asset"],
+  liability: ["Current Liability", "Long-term Liability"],
+  equity: ["Equity", "Retained Earnings"],
+  revenue: ["Operating Revenue", "Other Revenue"],
+  expense: ["Operating Expense", "Cost of Goods Sold", "Other Expense"],
 };
 
 export default function ChartOfAccounts() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ code: "", name: "", type: "Asset", sub_type: "", description: "" });
+  const [form, setForm] = useState({ code: "", name: "", type: "asset", sub_type: "", description: "" });
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["accounts"],
@@ -66,14 +74,14 @@ export default function ChartOfAccounts() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       setOpen(false);
-      setForm({ code: "", name: "", type: "Asset", sub_type: "", description: "" });
+      setForm({ code: "", name: "", type: "asset", sub_type: "", description: "" });
       toast.success("Account created successfully");
     },
     onError: (err: Error) => toast.error(err.message),
   });
 
   const getNormalSide = (type: string) =>
-    ["Asset", "Expense"].includes(type) ? "Debit" : "Credit";
+    ["asset", "expense"].includes(type) ? "Debit" : "Credit";
 
   return (
     <AppLayout>
@@ -97,7 +105,7 @@ export default function ChartOfAccounts() {
                     <Label>Type</Label>
                     <Select value={form.type} onValueChange={v => setForm(f => ({ ...f, type: v, sub_type: "" }))}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>{accountTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                      <SelectContent>{accountTypes.map(t => <SelectItem key={t} value={t}>{typeLabels[t]}</SelectItem>)}</SelectContent>
                     </Select>
                   </div>
                   <div>
@@ -145,7 +153,7 @@ export default function ChartOfAccounts() {
                         <td className="p-3 font-mono text-xs font-semibold">{acc.code}</td>
                         <td className="p-3 font-medium">{acc.name}</td>
                         <td className="p-3">
-                          <Badge variant="secondary" className={typeColors[acc.type] || ""}>{acc.type}</Badge>
+                          <Badge variant="secondary" className={typeColors[acc.type] || ""}>{typeLabels[acc.type] || acc.type}</Badge>
                         </td>
                         <td className="p-3 text-muted-foreground">{acc.sub_type || "—"}</td>
                         <td className="p-3 text-muted-foreground">{getNormalSide(acc.type)}</td>
