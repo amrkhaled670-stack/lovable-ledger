@@ -15,6 +15,7 @@ import { Plus, Eye, FileDown, MessageCircle, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { generateInvoicePDF } from "@/lib/pdf";
 import { shareInvoiceWhatsApp } from "@/lib/whatsapp";
+import { formatCurrency } from "@/lib/currency";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -41,10 +42,7 @@ export default function Invoices() {
   const { data: invoices = [], isLoading } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("invoices")
-        .select("*, customers(name)")
-        .order("date", { ascending: false });
+      const { data, error } = await supabase.from("invoices").select("*, customers(name)").order("date", { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -125,10 +123,10 @@ export default function Invoices() {
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("invoices.newInvoice")}</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg">
               <DialogHeader><DialogTitle>New Invoice</DialogTitle></DialogHeader>
               <div className="grid gap-4 py-2">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>Invoice #</Label><Input value={form.invoice_number} onChange={e => setForm(f => ({ ...f, invoice_number: e.target.value }))} placeholder="INV-001" /></div>
                   <div>
                     <Label>Customer</Label>
@@ -138,7 +136,7 @@ export default function Invoices() {
                     </Select>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>Due Date</Label><Input type="date" value={form.due_date} onChange={e => setForm(f => ({ ...f, due_date: e.target.value }))} /></div>
                   <div><Label>Amount</Label><Input type="number" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} placeholder="0.00" /></div>
                 </div>
@@ -166,13 +164,13 @@ export default function Invoices() {
         <Card>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[640px]">
                 <thead>
                   <tr className="border-b bg-muted/50">
                     <th className="text-start p-3 font-medium text-muted-foreground">{t("invoices.invoiceNumber")}</th>
-                    <th className="text-start p-3 font-medium text-muted-foreground">{t("invoices.customer")}</th>
-                    <th className="text-start p-3 font-medium text-muted-foreground">{t("invoices.date")}</th>
-                    <th className="text-start p-3 font-medium text-muted-foreground">{t("invoices.dueDate")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground hidden sm:table-cell">{t("invoices.customer")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground hidden md:table-cell">{t("invoices.date")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground hidden md:table-cell">{t("invoices.dueDate")}</th>
                     <th className="text-start p-3 font-medium text-muted-foreground">{t("invoices.status")}</th>
                     <th className="text-end p-3 font-medium text-muted-foreground">{t("invoices.amount")}</th>
                     <th className="text-center p-3 font-medium text-muted-foreground">{t("invoices.actions")}</th>
@@ -189,16 +187,16 @@ export default function Invoices() {
                     filtered.map((inv) => (
                       <tr key={inv.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono text-xs font-semibold">{inv.invoice_number}</td>
-                        <td className="p-3">{(inv.customers as any)?.name || "—"}</td>
-                        <td className="p-3 font-mono text-xs text-muted-foreground">{inv.date}</td>
-                        <td className="p-3 font-mono text-xs text-muted-foreground">{inv.due_date || "—"}</td>
+                        <td className="p-3 hidden sm:table-cell">{(inv.customers as any)?.name || "—"}</td>
+                        <td className="p-3 font-mono text-xs text-muted-foreground hidden md:table-cell">{inv.date}</td>
+                        <td className="p-3 font-mono text-xs text-muted-foreground hidden md:table-cell">{inv.due_date || "—"}</td>
                         <td className="p-3"><Badge variant="outline" className={statusColors[inv.status] || ""}>{inv.status}</Badge></td>
-                        <td className="p-3 text-end font-mono font-medium">${(inv.total ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                        <td className="p-3 text-end font-mono font-medium text-xs sm:text-sm">{formatCurrency(inv.total ?? 0)}</td>
                         <td className="p-3 text-center">
-                          <div className="flex items-center justify-center gap-1">
-                            <Button variant="ghost" size="sm" title={t("common.view")}><Eye className="h-4 w-4" /></Button>
-                            <Button variant="ghost" size="sm" onClick={() => handlePDF(inv)} title={t("invoices.exportPDF")}><FileDown className="h-4 w-4" /></Button>
-                            <Button variant="ghost" size="sm" onClick={() => handleWhatsApp(inv)} title={t("invoices.shareWhatsApp")}><MessageCircle className="h-4 w-4" /></Button>
+                          <div className="flex items-center justify-center gap-0.5">
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title={t("common.view")}><Eye className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handlePDF(inv)} title={t("invoices.exportPDF")}><FileDown className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => handleWhatsApp(inv)} title={t("invoices.shareWhatsApp")}><MessageCircle className="h-4 w-4" /></Button>
                           </div>
                         </td>
                       </tr>

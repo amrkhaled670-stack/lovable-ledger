@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { formatCurrency } from "@/lib/currency";
 
 function getStockStatus(qty: number, min: number) {
   if (qty === 0) return "outOfStock";
@@ -91,18 +92,18 @@ export default function Inventory() {
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("inventory.addProduct")}</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-[95vw] sm:max-w-lg">
               <DialogHeader><DialogTitle>{t("inventory.addProduct")}</DialogTitle></DialogHeader>
               <div className="grid gap-3 py-2">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>{t("inventory.sku")} *</Label><Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="PRD-001" /></div>
                   <div><Label>{t("inventory.product")} *</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>{t("inventory.quantity")}</Label><Input type="number" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} /></div>
                   <div><Label>{t("inventory.minStock")}</Label><Input type="number" value={form.min_stock_level} onChange={(e) => setForm({ ...form, min_stock_level: e.target.value })} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>{t("inventory.unitPrice")}</Label><Input type="number" step="0.01" value={form.unit_price} onChange={(e) => setForm({ ...form, unit_price: e.target.value })} /></div>
                   <div><Label>Cost Price</Label><Input type="number" step="0.01" value={form.cost_price} onChange={(e) => setForm({ ...form, cost_price: e.target.value })} /></div>
                 </div>
@@ -136,14 +137,14 @@ export default function Inventory() {
           <Card>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm min-w-[600px]">
                   <thead>
                     <tr className="border-b bg-muted/50">
                       <th className="text-start p-3 font-medium text-muted-foreground">{t("inventory.sku")}</th>
                       <th className="text-start p-3 font-medium text-muted-foreground">{t("inventory.product")}</th>
-                      <th className="text-start p-3 font-medium text-muted-foreground">{t("inventory.category")}</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground hidden md:table-cell">{t("inventory.category")}</th>
                       <th className="text-end p-3 font-medium text-muted-foreground">{t("inventory.quantity")}</th>
-                      <th className="text-end p-3 font-medium text-muted-foreground">{t("inventory.minStock")}</th>
+                      <th className="text-end p-3 font-medium text-muted-foreground hidden sm:table-cell">{t("inventory.minStock")}</th>
                       <th className="text-end p-3 font-medium text-muted-foreground">{t("inventory.unitPrice")}</th>
                       <th className="text-start p-3 font-medium text-muted-foreground">{t("inventory.status")}</th>
                     </tr>
@@ -155,10 +156,10 @@ export default function Inventory() {
                         <tr key={p.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                           <td className="p-3 font-mono text-xs font-semibold">{p.sku}</td>
                           <td className="p-3 font-medium">{p.name}</td>
-                          <td className="p-3 text-muted-foreground">{(p.product_categories as any)?.name || "—"}</td>
+                          <td className="p-3 text-muted-foreground hidden md:table-cell">{(p.product_categories as any)?.name || "—"}</td>
                           <td className="p-3 text-end font-mono">{p.quantity}</td>
-                          <td className="p-3 text-end font-mono text-muted-foreground">{p.min_stock_level}</td>
-                          <td className="p-3 text-end font-mono">${(p.unit_price ?? 0).toFixed(2)}</td>
+                          <td className="p-3 text-end font-mono text-muted-foreground hidden sm:table-cell">{p.min_stock_level}</td>
+                          <td className="p-3 text-end font-mono">{formatCurrency(p.unit_price ?? 0)}</td>
                           <td className="p-3">
                             <Badge variant="outline" className={statusStyles[status]}>
                               {status === "lowStock" && <AlertTriangle className="h-3 w-3 mr-1" />}
