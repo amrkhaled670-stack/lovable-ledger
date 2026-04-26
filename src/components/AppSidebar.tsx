@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, BookOpen, FileText, Landmark, Scale, BarChart3, Receipt,
   CreditCard, Users, Settings, LogOut, Package, Truck, Warehouse, ShoppingCart,
-  PieChart, DollarSign,
+  PieChart, DollarSign, Table2,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -31,6 +31,7 @@ export function AppSidebar() {
   const reportItems = [
     { title: t("nav.incomeStatement"), url: "/income-statement", icon: BarChart3 },
     { title: t("nav.balanceSheet"), url: "/balance-sheet", icon: BarChart3 },
+    { title: t("nav.americanJournal"), url: "/american-journal", icon: Table2 },
     { title: t("nav.analytics"), url: "/analytics", icon: PieChart },
   ];
 
