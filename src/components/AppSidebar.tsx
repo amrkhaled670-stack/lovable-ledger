@@ -1,5 +1,5 @@
 import {
-  LayoutDashboard, BookOpen, FileText, Scale, BarChart3, Receipt,
+  LayoutDashboard, BookOpen, FileText, Landmark, Scale, BarChart3, Receipt,
   CreditCard, Users, Settings, LogOut, Package, Truck, Warehouse, ShoppingCart,
   PieChart, DollarSign, Table2,
 } from "lucide-react";
