@@ -1,5 +1,5 @@
 import {
-  LayoutDashboard, BookOpen, FileText, Landmark, Scale, BarChart3, Receipt,
+  LayoutDashboard, BookOpen, FileText, Scale, BarChart3, Receipt,
   CreditCard, Users, Settings, LogOut, Package, Truck, Warehouse, ShoppingCart,
   PieChart, DollarSign, Table2,
 } from "lucide-react";
@@ -73,8 +73,8 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
-            <Landmark className="h-4 w-4 text-sidebar-primary-foreground" />
+          <div className="h-9 w-9 rounded-lg bg-white flex items-center justify-center shrink-0 ring-1 ring-border overflow-hidden">
+            <img src="/phoenix-logo.png" alt="Phoenix Accounting" className="h-8 w-8 object-contain" loading="lazy" width={36} height={36} />
           </div>
           {!collapsed && (
             <div>
