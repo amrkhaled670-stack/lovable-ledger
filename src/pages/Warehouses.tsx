@@ -45,7 +45,7 @@ export default function Warehouses() {
       queryClient.invalidateQueries({ queryKey: ["warehouses"] });
       setOpen(false);
       setForm({ name: "", location: "", description: "" });
-      toast.success("Warehouse created successfully");
+      toast.success(t("warehouses.createdSuccess"));
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -58,16 +58,16 @@ export default function Warehouses() {
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button size="sm"><Plus className="h-4 w-4 mr-1" />Add Warehouse</Button>
+              <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("warehouses.addWarehouse")}</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>New Warehouse</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t("warehouses.newWarehouse")}</DialogTitle></DialogHeader>
               <div className="grid gap-4 py-2">
-                <div><Label>Name</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Main Warehouse" /></div>
-                <div><Label>Location</Label><Input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} placeholder="New York, NY" /></div>
-                <div><Label>Description</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+                <div><Label>{t("warehouses.name")}</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder={t("warehouses.namePlaceholder")} /></div>
+                <div><Label>{t("warehouses.location")}</Label><Input value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} placeholder={t("warehouses.locationPlaceholder")} /></div>
+                <div><Label>{t("warehouses.description")}</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
                 <Button onClick={() => createMutation.mutate()} disabled={!form.name || createMutation.isPending}>
-                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}Create Warehouse
+                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}{t("warehouses.createWarehouse")}
                 </Button>
               </div>
             </DialogContent>
@@ -80,7 +80,7 @@ export default function Warehouses() {
             {Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-28 w-full rounded-lg" />)}
           </div>
         ) : warehouses.length === 0 ? (
-          <Card><CardContent className="p-8 text-center text-muted-foreground">No warehouses yet. Click "Add Warehouse" to get started.</CardContent></Card>
+          <Card><CardContent className="p-8 text-center text-muted-foreground">{t("warehouses.noWarehouses")}</CardContent></Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {warehouses.map((w) => (
