@@ -24,6 +24,7 @@
     "suppliers": "Suppliers",
     "warehouses": "Warehouses",
     "purchaseOrders": "Purchase Orders",
+    "americanJournal": "American Journal",
     "settings": "Settings",
     "logout": "Logout"
   },
@@ -221,6 +222,19 @@
     "title": "Purchase Orders",
     "description": "Manage purchase orders",
     "newOrder": "New Order"
+  },
+  "americanJournal": {
+    "title": "American Journal",
+    "description": "All account movements (Cash, Bank, Sales, etc.) in one horizontal view — American Accounting System",
+    "date": "Date",
+    "entryNumber": "Entry #",
+    "description_label": "Description",
+    "totalDebit": "Total Debit",
+    "totalCredit": "Total Credit",
+    "totals": "Totals",
+    "noData": "No journal entries yet. Add an entry to see it in the American Journal.",
+    "debit": "Dr",
+    "credit": "Cr"
   },
   "settings": {
     "title": "Settings",
