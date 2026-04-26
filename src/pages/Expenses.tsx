@@ -78,7 +78,7 @@ export default function Expenses() {
                   <div><Label>{t("expenses.date")}</Label><Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
                 </div>
                 <Button onClick={() => createMutation.mutate()} disabled={!form.description || !form.amount || createMutation.isPending}>
-                  {createMutation.isPending ? "Saving..." : "Save Expense"}
+                  {createMutation.isPending ? t("common.saving") : t("expenses.saveExpense")}
                 </Button>
               </div>
             </DialogContent>

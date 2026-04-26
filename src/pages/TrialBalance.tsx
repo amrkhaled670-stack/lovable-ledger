@@ -7,8 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatCurrency } from "@/lib/currency";
+import { useTranslation } from "react-i18next";
 
 export default function TrialBalance() {
+  const { t } = useTranslation();
   const { user } = useAuth();
 
   const { data: accounts = [], isLoading } = useQuery({
@@ -37,7 +39,7 @@ export default function TrialBalance() {
 
   return (
     <AppLayout>
-      <PageHeader title="Trial Balance" description="Verify debits equal credits" />
+      <PageHeader title={t("trialBalance.title")} description={t("trialBalance.description")} />
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         {isLoading ? <Skeleton className="h-64 rounded-xl" /> : (
           <Card>
@@ -46,30 +48,30 @@ export default function TrialBalance() {
                 <table className="w-full text-sm min-w-[400px]">
                   <thead>
                     <tr className="border-b bg-muted/50">
-                      <th className="text-left p-3 font-medium text-muted-foreground">Code</th>
-                      <th className="text-left p-3 font-medium text-muted-foreground">Account</th>
-                      <th className="text-right p-3 font-medium text-muted-foreground">Debit</th>
-                      <th className="text-right p-3 font-medium text-muted-foreground">Credit</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground">{t("trialBalance.code")}</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground">{t("trialBalance.account")}</th>
+                      <th className="text-end p-3 font-medium text-muted-foreground">{t("trialBalance.debit")}</th>
+                      <th className="text-end p-3 font-medium text-muted-foreground">{t("trialBalance.credit")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {rows.length === 0 ? (
-                      <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">No accounts yet</td></tr>
+                      <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">{t("trialBalance.noAccounts")}</td></tr>
                     ) : rows.map((row) => (
                       <tr key={row.code} className="border-b hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono text-xs font-semibold">{row.code}</td>
                         <td className="p-3">{row.name}</td>
-                        <td className="p-3 text-right font-mono">{row.debit > 0 ? formatCurrency(row.debit) : ''}</td>
-                        <td className="p-3 text-right font-mono">{row.credit > 0 ? formatCurrency(row.credit) : ''}</td>
+                        <td className="p-3 text-end font-mono">{row.debit > 0 ? formatCurrency(row.debit) : ''}</td>
+                        <td className="p-3 text-end font-mono">{row.credit > 0 ? formatCurrency(row.credit) : ''}</td>
                       </tr>
                     ))}
                   </tbody>
                   {rows.length > 0 && (
                     <tfoot>
                       <tr className="bg-muted/50 font-bold">
-                        <td className="p-3" colSpan={2}>Totals</td>
-                        <td className="p-3 text-right font-mono">{formatCurrency(totalDebit)}</td>
-                        <td className="p-3 text-right font-mono">{formatCurrency(totalCredit)}</td>
+                        <td className="p-3" colSpan={2}>{t("trialBalance.totals")}</td>
+                        <td className="p-3 text-end font-mono">{formatCurrency(totalDebit)}</td>
+                        <td className="p-3 text-end font-mono">{formatCurrency(totalCredit)}</td>
                       </tr>
                     </tfoot>
                   )}

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Landmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {
@@ -27,7 +26,7 @@ export default function Login() {
       const { error } = await resetPassword(email);
       setLoading(false);
       if (error) {
-        toast({ variant: "destructive", title: "Error", description: error.message });
+        toast({ variant: "destructive", title: t("auth.errorTitle"), description: error.message });
       } else {
         toast({ title: t("auth.resetEmailSent") });
         setForgotMode(false);
@@ -38,7 +37,7 @@ export default function Login() {
     const { error } = await signIn(email, password);
     setLoading(false);
     if (error) {
-      toast({ variant: "destructive", title: "Error", description: t("auth.loginError") });
+      toast({ variant: "destructive", title: t("auth.errorTitle"), description: t("auth.loginError") });
     } else {
       navigate("/");
     }
@@ -48,8 +47,8 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
-          <div className="mx-auto h-12 w-12 rounded-xl bg-primary flex items-center justify-center mb-2">
-            <Landmark className="h-6 w-6 text-primary-foreground" />
+          <div className="mx-auto h-14 w-14 rounded-xl bg-white ring-1 ring-border flex items-center justify-center mb-2 overflow-hidden">
+            <img src="/phoenix-logo.png" alt="Phoenix" className="h-12 w-12 object-contain" width={56} height={56} />
           </div>
           <CardTitle className="text-xl">{forgotMode ? t("auth.forgotPassword") : t("auth.loginTitle")}</CardTitle>
           <CardDescription>{forgotMode ? t("auth.resetPasswordSubtitle") : t("auth.loginSubtitle")}</CardDescription>

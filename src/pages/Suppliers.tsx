@@ -47,7 +47,7 @@ export default function Suppliers() {
       queryClient.invalidateQueries({ queryKey: ["suppliers"] });
       setOpen(false);
       setForm({ name: "", email: "", phone: "", country: "", address: "" });
-      toast.success("Supplier created successfully");
+      toast.success(t("suppliers.createdSuccess"));
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -63,19 +63,19 @@ export default function Suppliers() {
               <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("suppliers.addSupplier")}</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>New Supplier</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t("suppliers.newSupplier")}</DialogTitle></DialogHeader>
               <div className="grid gap-4 py-2">
-                <div><Label>Name</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Supplier name" /></div>
+                <div><Label>{t("suppliers.name")}</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder={t("suppliers.namePlaceholder")} /></div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div><Label>Email</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="email@example.com" /></div>
-                  <div><Label>Phone</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+1 555-0000" /></div>
+                  <div><Label>{t("suppliers.email")}</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="email@example.com" /></div>
+                  <div><Label>{t("suppliers.phone")}</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+20 100 000 0000" /></div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div><Label>Country</Label><Input value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))} /></div>
-                  <div><Label>Address</Label><Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} /></div>
+                  <div><Label>{t("suppliers.country")}</Label><Input value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))} /></div>
+                  <div><Label>{t("suppliers.address")}</Label><Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} /></div>
                 </div>
                 <Button onClick={() => createMutation.mutate()} disabled={!form.name || createMutation.isPending}>
-                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}Create Supplier
+                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}{t("suppliers.createSupplier")}
                 </Button>
               </div>
             </DialogContent>
@@ -88,7 +88,7 @@ export default function Suppliers() {
             {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-32 w-full rounded-lg" />)}
           </div>
         ) : suppliers.length === 0 ? (
-          <Card><CardContent className="p-8 text-center text-muted-foreground">No suppliers yet. Click "Add Supplier" to get started.</CardContent></Card>
+          <Card><CardContent className="p-8 text-center text-muted-foreground">{t("suppliers.noSuppliers")}</CardContent></Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {suppliers.map((s) => (

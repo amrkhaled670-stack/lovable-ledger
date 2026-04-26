@@ -105,10 +105,10 @@ export default function Inventory() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div><Label>{t("inventory.unitPrice")}</Label><Input type="number" step="0.01" value={form.unit_price} onChange={(e) => setForm({ ...form, unit_price: e.target.value })} /></div>
-                  <div><Label>Cost Price</Label><Input type="number" step="0.01" value={form.cost_price} onChange={(e) => setForm({ ...form, cost_price: e.target.value })} /></div>
+                  <div><Label>{t("inventory.costPrice")}</Label><Input type="number" step="0.01" value={form.cost_price} onChange={(e) => setForm({ ...form, cost_price: e.target.value })} /></div>
                 </div>
                 <Button onClick={() => createMutation.mutate()} disabled={!form.sku || !form.name || createMutation.isPending}>
-                  {createMutation.isPending ? "Saving..." : "Save Product"}
+                  {createMutation.isPending ? t("common.saving") : t("inventory.saveProduct")}
                 </Button>
               </div>
             </DialogContent>
@@ -119,7 +119,7 @@ export default function Inventory() {
       {lowStockCount > 0 && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-4 p-3 rounded-lg border border-warning/30 bg-warning/5 flex items-center gap-2 text-sm text-warning">
           <AlertTriangle className="h-4 w-4" />
-          {t("inventory.lowStockAlert")} ({lowStockCount} items)
+          {t("inventory.lowStockAlert")} ({t("inventory.lowStockItems", { count: lowStockCount })})
         </motion.div>
       )}
 

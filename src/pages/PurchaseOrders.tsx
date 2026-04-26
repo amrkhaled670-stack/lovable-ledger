@@ -66,7 +66,7 @@ export default function PurchaseOrders() {
       queryClient.invalidateQueries({ queryKey: ["purchase_orders"] });
       setOpen(false);
       setForm({ order_number: "", supplier_id: "", total: "" });
-      toast.success("Purchase order created");
+      toast.success(t("purchaseOrders.createdSuccess"));
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -82,19 +82,19 @@ export default function PurchaseOrders() {
               <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("purchaseOrders.newOrder")}</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>New Purchase Order</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t("purchaseOrders.newPurchaseOrder")}</DialogTitle></DialogHeader>
               <div className="grid gap-4 py-2">
-                <div><Label>Order Number</Label><Input value={form.order_number} onChange={e => setForm(f => ({ ...f, order_number: e.target.value }))} placeholder="PO-001" /></div>
+                <div><Label>{t("purchaseOrders.orderNumberLabel")}</Label><Input value={form.order_number} onChange={e => setForm(f => ({ ...f, order_number: e.target.value }))} placeholder={t("purchaseOrders.orderNumberPlaceholder")} /></div>
                 <div>
-                  <Label>Supplier</Label>
+                  <Label>{t("purchaseOrders.supplier")}</Label>
                   <Select value={form.supplier_id} onValueChange={v => setForm(f => ({ ...f, supplier_id: v }))}>
-                    <SelectTrigger><SelectValue placeholder="Select supplier..." /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder={t("purchaseOrders.selectSupplier")} /></SelectTrigger>
                     <SelectContent>{suppliers.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
-                <div><Label>Total</Label><Input type="number" value={form.total} onChange={e => setForm(f => ({ ...f, total: e.target.value }))} placeholder="0.00" /></div>
+                <div><Label>{t("purchaseOrders.total")}</Label><Input type="number" value={form.total} onChange={e => setForm(f => ({ ...f, total: e.target.value }))} placeholder="0.00" /></div>
                 <Button onClick={() => createMutation.mutate()} disabled={!form.order_number || createMutation.isPending}>
-                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}Create Order
+                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}{t("purchaseOrders.createOrder")}
                 </Button>
               </div>
             </DialogContent>
@@ -108,11 +108,11 @@ export default function PurchaseOrders() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-muted/50">
-                    <th className="text-start p-3 font-medium text-muted-foreground">Order #</th>
-                    <th className="text-start p-3 font-medium text-muted-foreground">Supplier</th>
-                    <th className="text-start p-3 font-medium text-muted-foreground">Date</th>
-                    <th className="text-start p-3 font-medium text-muted-foreground">Status</th>
-                    <th className="text-end p-3 font-medium text-muted-foreground">Total</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("purchaseOrders.orderNumber")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("purchaseOrders.supplier")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("purchaseOrders.date")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("purchaseOrders.status")}</th>
+                    <th className="text-end p-3 font-medium text-muted-foreground">{t("purchaseOrders.total")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -121,15 +121,15 @@ export default function PurchaseOrders() {
                       <tr key={i} className="border-b"><td colSpan={5} className="p-3"><Skeleton className="h-5 w-full" /></td></tr>
                     ))
                   ) : orders.length === 0 ? (
-                    <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">No purchase orders yet.</td></tr>
+                    <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">{t("purchaseOrders.noOrders")}</td></tr>
                   ) : (
                     orders.map((o) => (
                       <tr key={o.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono text-xs font-semibold">{o.order_number}</td>
-                        <td className="p-3">{(o.suppliers as any)?.name || "—"}</td>
+                        <td className="p-3">{(o.suppliers as any)?.name || t("common.dash")}</td>
                         <td className="p-3 font-mono text-xs text-muted-foreground">{o.date}</td>
-                        <td className="p-3"><Badge variant="outline" className={statusColors[o.status] || ""}>{o.status}</Badge></td>
-                        <td className="p-3 text-end font-mono font-medium">${(o.total ?? 0).toLocaleString()}</td>
+                        <td className="p-3"><Badge variant="outline" className={statusColors[o.status] || ""}>{t(`purchaseOrders.statuses.${o.status}`, o.status)}</Badge></td>
+                        <td className="p-3 text-end font-mono font-medium">{(o.total ?? 0).toLocaleString()}</td>
                       </tr>
                     ))
                   )}

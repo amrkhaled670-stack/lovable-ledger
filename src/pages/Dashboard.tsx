@@ -9,9 +9,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatCurrency } from "@/lib/currency";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["invoices"],
@@ -60,37 +62,37 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
-      <PageHeader title="Dashboard" description="Financial overview" />
+      <PageHeader title={t("dashboard.title")} description={t("dashboard.description")} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <StatCard title="Total Revenue" value={formatCurrency(totalRevenue)} changeType="positive" icon={TrendingUp} />
-        <StatCard title="Total Expenses" value={formatCurrency(totalExpenses)} changeType="negative" icon={TrendingDown} />
-        <StatCard title="Net Income" value={formatCurrency(netIncome)} changeType={netIncome >= 0 ? "positive" : "negative"} icon={Receipt} />
-        <StatCard title="Cash Balance" value={formatCurrency(netIncome)} changeType="neutral" icon={Wallet} />
+        <StatCard title={t("dashboard.totalRevenue")} value={formatCurrency(totalRevenue)} changeType="positive" icon={TrendingUp} />
+        <StatCard title={t("dashboard.totalExpenses")} value={formatCurrency(totalExpenses)} changeType="negative" icon={TrendingDown} />
+        <StatCard title={t("dashboard.netIncome")} value={formatCurrency(netIncome)} changeType={netIncome >= 0 ? "positive" : "negative"} icon={Receipt} />
+        <StatCard title={t("dashboard.cashBalance")} value={formatCurrency(netIncome)} changeType="neutral" icon={Wallet} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-base font-semibold">Recent Payments</CardTitle>
+              <CardTitle className="text-base font-semibold">{t("dashboard.recentPayments")}</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">
-                      <th className="text-left p-3 font-medium text-muted-foreground">Date</th>
-                      <th className="text-right p-3 font-medium text-muted-foreground">Amount</th>
+                      <th className="text-start p-3 font-medium text-muted-foreground">{t("dashboard.date")}</th>
+                      <th className="text-end p-3 font-medium text-muted-foreground">{t("dashboard.amount")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {payments.length === 0 ? (
-                      <tr><td colSpan={2} className="p-6 text-center text-muted-foreground text-sm">No payments yet</td></tr>
+                      <tr><td colSpan={2} className="p-6 text-center text-muted-foreground text-sm">{t("dashboard.noPayments")}</td></tr>
                     ) : payments.map((p, i) => (
                       <tr key={i} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono text-xs text-muted-foreground">{p.date}</td>
-                        <td className="p-3 text-right font-mono">
+                        <td className="p-3 text-end font-mono">
                           <span className="text-success flex items-center justify-end gap-1">
                             <ArrowUpRight className="h-3 w-3" />
                             {formatCurrency(p.amount)}
@@ -108,12 +110,12 @@ export default function Dashboard() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-base font-semibold">Quick Stats</CardTitle>
+              <CardTitle className="text-base font-semibold">{t("dashboard.quickStats")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {[
-                { label: "Pending Invoices", value: String(pendingInvoices), color: "bg-warning" },
-                { label: "Total Customers", value: String(customers.length), color: "bg-primary" },
+                { label: t("dashboard.pendingInvoices"), value: String(pendingInvoices), color: "bg-warning" },
+                { label: t("dashboard.totalCustomers"), value: String(customers.length), color: "bg-primary" },
               ].map((stat) => (
                 <div key={stat.label} className="flex items-center justify-between py-2">
                   <div className="flex items-center gap-3">

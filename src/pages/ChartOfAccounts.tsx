@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/currency";
+import { useTranslation } from "react-i18next";
 
 const typeColors: Record<string, string> = {
   asset: "bg-primary/10 text-primary",
@@ -25,24 +26,34 @@ const typeColors: Record<string, string> = {
   expense: "bg-warning/10 text-warning",
 };
 
-const typeLabels: Record<string, string> = {
-  asset: "Asset",
-  liability: "Liability",
-  equity: "Equity",
-  revenue: "Revenue",
-  expense: "Expense",
-};
-
 const accountTypes = ["asset", "liability", "equity", "revenue", "expense"];
-const subTypes: Record<string, string[]> = {
-  asset: ["Current Asset", "Fixed Asset", "Other Asset"],
-  liability: ["Current Liability", "Long-term Liability"],
-  equity: ["Equity", "Retained Earnings"],
-  revenue: ["Operating Revenue", "Other Revenue"],
-  expense: ["Operating Expense", "Cost of Goods Sold", "Other Expense"],
+const subTypeKeys: Record<string, { value: string; key: string }[]> = {
+  asset: [
+    { value: "Current Asset", key: "currentAsset" },
+    { value: "Fixed Asset", key: "fixedAsset" },
+    { value: "Other Asset", key: "otherAsset" },
+  ],
+  liability: [
+    { value: "Current Liability", key: "currentLiability" },
+    { value: "Long-term Liability", key: "longTermLiability" },
+  ],
+  equity: [
+    { value: "Equity", key: "equity" },
+    { value: "Retained Earnings", key: "retainedEarnings" },
+  ],
+  revenue: [
+    { value: "Operating Revenue", key: "operatingRevenue" },
+    { value: "Other Revenue", key: "otherRevenue" },
+  ],
+  expense: [
+    { value: "Operating Expense", key: "operatingExpense" },
+    { value: "Cost of Goods Sold", key: "cogs" },
+    { value: "Other Expense", key: "otherExpense" },
+  ],
 };
 
 export default function ChartOfAccounts() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -73,50 +84,50 @@ export default function ChartOfAccounts() {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       setOpen(false);
       setForm({ code: "", name: "", type: "asset", sub_type: "", description: "" });
-      toast.success("Account created successfully");
+      toast.success(t("accounts.createdSuccess"));
     },
     onError: (err: Error) => toast.error(err.message),
   });
 
   const getNormalSide = (type: string) =>
-    ["asset", "expense"].includes(type) ? "Debit" : "Credit";
+    ["asset", "expense"].includes(type) ? t("accounts.debit") : t("accounts.credit");
 
   return (
     <AppLayout>
       <PageHeader
-        title="Chart of Accounts"
-        description="Manage your general ledger accounts"
+        title={t("accounts.title")}
+        description={t("accounts.description")}
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button size="sm"><Plus className="h-4 w-4 mr-1" />Add Account</Button>
+              <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("accounts.addAccount")}</Button>
             </DialogTrigger>
             <DialogContent className="max-w-[95vw] sm:max-w-lg">
-              <DialogHeader><DialogTitle>New Account</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t("accounts.newAccount")}</DialogTitle></DialogHeader>
               <div className="grid gap-4 py-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div><Label>Code</Label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="1000" /></div>
-                  <div><Label>Name</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Cash" /></div>
+                  <div><Label>{t("accounts.code")}</Label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="1000" /></div>
+                  <div><Label>{t("accounts.name")}</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <Label>Type</Label>
+                    <Label>{t("accounts.type")}</Label>
                     <Select value={form.type} onValueChange={v => setForm(f => ({ ...f, type: v, sub_type: "" }))}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>{accountTypes.map(t => <SelectItem key={t} value={t}>{typeLabels[t]}</SelectItem>)}</SelectContent>
+                      <SelectContent>{accountTypes.map(at => <SelectItem key={at} value={at}>{t(`accounts.types.${at}`)}</SelectItem>)}</SelectContent>
                     </Select>
                   </div>
                   <div>
-                    <Label>Subtype</Label>
+                    <Label>{t("accounts.subtype")}</Label>
                     <Select value={form.sub_type} onValueChange={v => setForm(f => ({ ...f, sub_type: v }))}>
-                      <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
-                      <SelectContent>{(subTypes[form.type] || []).map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                      <SelectTrigger><SelectValue placeholder={t("accounts.selectSubtype")} /></SelectTrigger>
+                      <SelectContent>{(subTypeKeys[form.type] || []).map(s => <SelectItem key={s.value} value={s.value}>{t(`accounts.subtypes.${s.key}`)}</SelectItem>)}</SelectContent>
                     </Select>
                   </div>
                 </div>
-                <div><Label>Description</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+                <div><Label>{t("accounts.description")}</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
                 <Button onClick={() => createMutation.mutate()} disabled={!form.code || !form.name || createMutation.isPending}>
-                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}Create Account
+                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}{t("accounts.createAccount")}
                 </Button>
               </div>
             </DialogContent>
@@ -130,12 +141,12 @@ export default function ChartOfAccounts() {
               <table className="w-full text-sm min-w-[500px]">
                 <thead>
                   <tr className="border-b bg-muted/50">
-                    <th className="text-left p-3 font-medium text-muted-foreground">Code</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Account Name</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Type</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground hidden sm:table-cell">Subtype</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground hidden md:table-cell">Normal</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Balance</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("accounts.code")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("accounts.accountName")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("accounts.type")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground hidden sm:table-cell">{t("accounts.subtype")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground hidden md:table-cell">{t("accounts.normal")}</th>
+                    <th className="text-end p-3 font-medium text-muted-foreground">{t("accounts.balance")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -144,16 +155,16 @@ export default function ChartOfAccounts() {
                       <tr key={i} className="border-b"><td colSpan={6} className="p-3"><Skeleton className="h-5 w-full" /></td></tr>
                     ))
                   ) : accounts.length === 0 ? (
-                    <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No accounts yet. Click "Add Account" to get started.</td></tr>
+                    <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">{t("accounts.noAccounts")}</td></tr>
                   ) : (
                     accounts.map((acc) => (
                       <tr key={acc.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors cursor-pointer">
                         <td className="p-3 font-mono text-xs font-semibold">{acc.code}</td>
                         <td className="p-3 font-medium">{acc.name}</td>
                         <td className="p-3">
-                          <Badge variant="secondary" className={typeColors[acc.type] || ""}>{typeLabels[acc.type] || acc.type}</Badge>
+                          <Badge variant="secondary" className={typeColors[acc.type] || ""}>{t(`accounts.types.${acc.type}`, acc.type)}</Badge>
                         </td>
-                        <td className="p-3 text-muted-foreground hidden sm:table-cell">{acc.sub_type || "—"}</td>
+                        <td className="p-3 text-muted-foreground hidden sm:table-cell">{acc.sub_type || t("common.dash")}</td>
                         <td className="p-3 text-muted-foreground hidden md:table-cell">{getNormalSide(acc.type)}</td>
                         <td className="p-3 text-right font-mono font-medium">
                           {formatCurrency(acc.balance ?? 0)}

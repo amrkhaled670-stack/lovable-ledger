@@ -14,8 +14,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function JournalEntries() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -48,7 +50,7 @@ export default function JournalEntries() {
       queryClient.invalidateQueries({ queryKey: ["journal_entries"] });
       setOpen(false);
       setForm({ entry_number: "", description: "", total_debit: "", total_credit: "" });
-      toast.success("Journal entry created");
+      toast.success(t("journal.createdSuccess"));
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -56,24 +58,24 @@ export default function JournalEntries() {
   return (
     <AppLayout>
       <PageHeader
-        title="Journal Entries"
-        description="Record and manage journal entries"
+        title={t("journal.title")}
+        description={t("journal.description")}
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button size="sm"><Plus className="h-4 w-4 mr-1" />New Entry</Button>
+              <Button size="sm"><Plus className="h-4 w-4 mr-1" />{t("journal.newEntry")}</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>New Journal Entry</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t("journal.newJournalEntry")}</DialogTitle></DialogHeader>
               <div className="grid gap-4 py-2">
-                <div><Label>Entry Number</Label><Input value={form.entry_number} onChange={e => setForm(f => ({ ...f, entry_number: e.target.value }))} placeholder="JE-001" /></div>
-                <div><Label>Description</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Office supplies purchase" /></div>
+                <div><Label>{t("journal.entryNumberLabel")}</Label><Input value={form.entry_number} onChange={e => setForm(f => ({ ...f, entry_number: e.target.value }))} placeholder={t("journal.entryNumberPlaceholder")} /></div>
+                <div><Label>{t("journal.description")}</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder={t("journal.descriptionPlaceholder")} /></div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div><Label>Total Debit</Label><Input type="number" value={form.total_debit} onChange={e => setForm(f => ({ ...f, total_debit: e.target.value }))} placeholder="0.00" /></div>
-                  <div><Label>Total Credit</Label><Input type="number" value={form.total_credit} onChange={e => setForm(f => ({ ...f, total_credit: e.target.value }))} placeholder="0.00" /></div>
+                  <div><Label>{t("journal.totalDebit")}</Label><Input type="number" value={form.total_debit} onChange={e => setForm(f => ({ ...f, total_debit: e.target.value }))} placeholder="0.00" /></div>
+                  <div><Label>{t("journal.totalCredit")}</Label><Input type="number" value={form.total_credit} onChange={e => setForm(f => ({ ...f, total_credit: e.target.value }))} placeholder="0.00" /></div>
                 </div>
                 <Button onClick={() => createMutation.mutate()} disabled={!form.entry_number || createMutation.isPending}>
-                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}Create Entry
+                  {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}{t("journal.createEntry")}
                 </Button>
               </div>
             </DialogContent>
@@ -87,12 +89,12 @@ export default function JournalEntries() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-muted/50">
-                    <th className="text-left p-3 font-medium text-muted-foreground">Entry #</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Date</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Description</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Debit</th>
-                    <th className="text-right p-3 font-medium text-muted-foreground">Credit</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("journal.entryNumber")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("journal.date")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("journal.description")}</th>
+                    <th className="text-start p-3 font-medium text-muted-foreground">{t("journal.status")}</th>
+                    <th className="text-end p-3 font-medium text-muted-foreground">{t("journal.debit")}</th>
+                    <th className="text-end p-3 font-medium text-muted-foreground">{t("journal.credit")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -101,18 +103,18 @@ export default function JournalEntries() {
                       <tr key={i} className="border-b"><td colSpan={6} className="p-3"><Skeleton className="h-5 w-full" /></td></tr>
                     ))
                   ) : entries.length === 0 ? (
-                    <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No journal entries yet. Click "New Entry" to get started.</td></tr>
+                    <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">{t("journal.noEntries")}</td></tr>
                   ) : (
                     entries.map((entry) => (
                       <tr key={entry.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="p-3 font-mono text-xs font-semibold">{entry.entry_number}</td>
                         <td className="p-3 font-mono text-xs text-muted-foreground">{entry.date}</td>
-                        <td className="p-3">{entry.description || "—"}</td>
+                        <td className="p-3">{entry.description || t("common.dash")}</td>
                         <td className="p-3">
-                          <Badge variant={entry.status === "posted" ? "default" : "secondary"}>{entry.status}</Badge>
+                          <Badge variant={entry.status === "posted" ? "default" : "secondary"}>{t(`common.${entry.status}`, entry.status)}</Badge>
                         </td>
-                        <td className="p-3 text-right font-mono">${(entry.total_debit ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                        <td className="p-3 text-right font-mono">${(entry.total_credit ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                        <td className="p-3 text-end font-mono">{(entry.total_debit ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                        <td className="p-3 text-end font-mono">{(entry.total_credit ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                       </tr>
                     ))
                   )}

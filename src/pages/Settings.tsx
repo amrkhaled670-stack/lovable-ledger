@@ -24,9 +24,9 @@ export default function SettingsPage() {
         <Card>
           <CardHeader><CardTitle className="text-base">{t("settings.companyInfo")}</CardTitle></CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-muted-foreground">{t("settings.companyName")}</span><span className="font-medium">AccuBooks Inc.</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">{t("settings.fiscalYear")}</span><span className="font-medium">January - December</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">{t("settings.currency")}</span><span className="font-medium">USD ($)</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">{t("settings.companyName")}</span><span className="font-medium">{t("app.name")}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">{t("settings.fiscalYear")}</span><span className="font-medium">{t("settings.fiscalYearValue")}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">{t("settings.currency")}</span><span className="font-medium">{t("settings.currencyValue")}</span></div>
           </CardContent>
         </Card>
 

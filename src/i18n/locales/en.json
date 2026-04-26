@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "AccuBooks",
-    "subtitle": "Accounting System"
+    "name": "Phoenix Accounting",
+    "subtitle": "Rise. Track. Thrive."
   },
   "nav": {
     "overview": "Overview",
@@ -53,7 +53,8 @@
     "loginError": "Invalid email or password.",
     "signupError": "Could not create account. Please try again.",
     "orContinueWith": "Or continue with",
-    "google": "Google"
+    "google": "Google",
+    "errorTitle": "Error"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -62,38 +63,77 @@
     "totalExpenses": "Total Expenses",
     "netIncome": "Net Income",
     "cashBalance": "Cash Balance",
-    "recentTransactions": "Recent Transactions",
+    "recentPayments": "Recent Payments",
     "quickStats": "Quick Stats",
     "accountsReceivable": "Accounts Receivable",
     "accountsPayable": "Accounts Payable",
     "pendingInvoices": "Pending Invoices",
     "totalCustomers": "Total Customers",
+    "noPayments": "No payments yet",
     "date": "Date",
-    "description": "Description",
     "amount": "Amount"
   },
   "accounts": {
     "title": "Chart of Accounts",
     "description": "Manage your general ledger accounts",
     "addAccount": "Add Account",
+    "newAccount": "New Account",
+    "createAccount": "Create Account",
     "code": "Code",
     "accountName": "Account Name",
+    "name": "Name",
     "type": "Type",
     "subtype": "Subtype",
+    "selectSubtype": "Select...",
     "normal": "Normal",
-    "balance": "Balance"
+    "debit": "Debit",
+    "credit": "Credit",
+    "balance": "Balance",
+    "description": "Description",
+    "noAccounts": "No accounts yet. Click \"Add Account\" to get started.",
+    "createdSuccess": "Account created successfully",
+    "types": {
+      "asset": "Asset",
+      "liability": "Liability",
+      "equity": "Equity",
+      "revenue": "Revenue",
+      "expense": "Expense"
+    },
+    "subtypes": {
+      "currentAsset": "Current Asset",
+      "fixedAsset": "Fixed Asset",
+      "otherAsset": "Other Asset",
+      "currentLiability": "Current Liability",
+      "longTermLiability": "Long-term Liability",
+      "equity": "Equity",
+      "retainedEarnings": "Retained Earnings",
+      "operatingRevenue": "Operating Revenue",
+      "otherRevenue": "Other Revenue",
+      "operatingExpense": "Operating Expense",
+      "cogs": "Cost of Goods Sold",
+      "otherExpense": "Other Expense"
+    }
   },
   "journal": {
     "title": "Journal Entries",
     "description": "Record and manage journal entries",
     "newEntry": "New Entry",
+    "createEntry": "Create Entry",
+    "newJournalEntry": "New Journal Entry",
     "entryNumber": "Entry #",
+    "entryNumberLabel": "Entry Number",
+    "entryNumberPlaceholder": "JE-001",
+    "descriptionPlaceholder": "Office supplies purchase",
     "date": "Date",
     "description": "Description",
     "status": "Status",
+    "totalDebit": "Total Debit",
+    "totalCredit": "Total Credit",
     "debit": "Debit",
     "credit": "Credit",
-    "actions": "Actions"
+    "actions": "Actions",
+    "noEntries": "No journal entries yet. Click \"New Entry\" to get started.",
+    "createdSuccess": "Journal entry created"
   },
   "ledger": {
     "title": "General Ledger",
@@ -104,98 +144,133 @@
     "account": "Account",
     "debit": "Debit",
     "credit": "Credit",
-    "balance": "Balance"
+    "balance": "Balance",
+    "noEntries": "No ledger entries yet. Create journal entries to populate."
   },
   "trialBalance": {
     "title": "Trial Balance",
-    "description": "Account balances summary",
+    "description": "Verify debits equal credits",
     "code": "Code",
     "account": "Account",
     "debit": "Debit",
     "credit": "Credit",
-    "totals": "Totals"
+    "totals": "Totals",
+    "noAccounts": "No accounts yet"
   },
   "incomeStatement": {
     "title": "Income Statement",
-    "description": "Revenue and expense summary",
+    "description": "Revenue and expenses summary",
     "revenue": "Revenue",
     "expenses": "Expenses",
     "totalRevenue": "Total Revenue",
     "totalExpenses": "Total Expenses",
-    "netIncome": "Net Income"
+    "netIncome": "Net Income",
+    "noRevenue": "No revenue accounts",
+    "noExpenses": "No expense accounts"
   },
   "balanceSheet": {
     "title": "Balance Sheet",
-    "description": "Assets, liabilities, and equity",
+    "description": "Assets, liabilities and equity",
     "assets": "Assets",
-    "currentAssets": "Current Assets",
-    "fixedAssets": "Fixed Assets",
-    "totalCurrentAssets": "Total Current Assets",
-    "totalFixedAssets": "Total Fixed Assets",
-    "totalAssets": "Total Assets",
     "liabilities": "Liabilities",
-    "currentLiabilities": "Current Liabilities",
-    "longTermLiabilities": "Long-term Liabilities",
-    "totalCurrentLiabilities": "Total Current Liabilities",
-    "totalLiabilities": "Total Liabilities",
     "equity": "Equity",
+    "totalAssets": "Total Assets",
+    "totalLiabilities": "Total Liabilities",
     "totalEquity": "Total Equity",
-    "totalLiabilitiesEquity": "Total Liabilities & Equity"
+    "totalLiabilitiesEquity": "Total Liabilities & Equity",
+    "noAssets": "No asset accounts",
+    "noLiabilities": "No liability accounts",
+    "noEquity": "No equity accounts"
   },
   "invoices": {
     "title": "Invoices",
     "description": "Manage customer invoices",
     "newInvoice": "New Invoice",
+    "createInvoice": "Create Invoice",
     "invoiceNumber": "Invoice #",
+    "invoiceNumberLabel": "Invoice Number",
+    "invoiceNumberPlaceholder": "INV-001",
     "customer": "Customer",
+    "selectCustomer": "Select customer...",
     "date": "Date",
     "dueDate": "Due Date",
     "status": "Status",
     "amount": "Amount",
+    "amountPlaceholder": "0.00",
     "actions": "Actions",
     "shareWhatsApp": "Share via WhatsApp",
-    "exportPDF": "Export PDF"
+    "exportPDF": "Export PDF",
+    "createdSuccess": "Invoice created successfully"
   },
   "payments": {
     "title": "Payments",
     "description": "Track incoming and outgoing payments",
     "recordPayment": "Record Payment",
+    "savePayment": "Save Payment",
     "paymentNumber": "Payment #",
+    "paymentNumberLabel": "Payment Number",
+    "paymentNumberPlaceholder": "PAY-001",
     "date": "Date",
     "reference": "Reference",
     "customer": "Customer",
     "method": "Method",
     "status": "Status",
-    "amount": "Amount"
+    "amount": "Amount",
+    "noPayments": "No payments found",
+    "createdSuccess": "Payment recorded",
+    "methods": {
+      "cash": "Cash",
+      "bank_transfer": "Bank Transfer",
+      "credit_card": "Credit Card",
+      "check": "Check"
+    }
   },
   "customers": {
     "title": "Customers",
     "description": "Manage your customer directory",
     "addCustomer": "Add Customer",
-    "outstandingBalance": "Outstanding Balance"
+    "newCustomer": "New Customer",
+    "saveCustomer": "Save Customer",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "city": "City",
+    "country": "Country",
+    "taxNumber": "Tax Number",
+    "address": "Address",
+    "outstandingBalance": "Outstanding Balance",
+    "noCustomers": "No customers found",
+    "createdSuccess": "Customer added"
   },
   "expenses": {
     "title": "Expenses",
     "description": "Track and categorize expenses",
     "addExpense": "Add Expense",
+    "saveExpense": "Save Expense",
     "category": "Category",
     "date": "Date",
     "description_label": "Description",
-    "amount": "Amount"
+    "amount": "Amount",
+    "lowStockAlert": "Low stock alert! Order more inventory.",
+    "createdSuccess": "Expense added"
   },
   "analyticsPage": {
     "title": "Financial Analytics",
     "description": "Charts and insights",
     "expenseBreakdown": "Expense Breakdown by Category",
     "monthlyProfitLoss": "Monthly Profit & Loss",
+    "summary": "Summary",
     "revenue": "Revenue",
     "expenses": "Expenses",
-    "profit": "Profit"
+    "profit": "Profit",
+    "noExpenseData": "No expense data yet",
+    "uncategorized": "Uncategorized"
   },
   "inventory": {
     "title": "Inventory",
     "description": "Manage products and stock levels",
     "addProduct": "Add Product",
+    "saveProduct": "Save Product",
     "sku": "SKU",
     "product": "Product",
     "category": "Category",
@@ -207,21 +282,61 @@
     "lowStock": "Low Stock",
     "inStock": "In Stock",
     "outOfStock": "Out of Stock",
-    "lowStockAlert": "Low stock alert! Order more inventory."
+    "lowStockAlert": "Low stock alert! Order more inventory.",
+    "lowStockItems": "{{count}} items",
+    "createdSuccess": "Product added"
   },
   "suppliers": {
     "title": "Suppliers",
     "description": "Manage your suppliers",
-    "addSupplier": "Add Supplier"
+    "addSupplier": "Add Supplier",
+    "newSupplier": "New Supplier",
+    "createSupplier": "Create Supplier",
+    "name": "Name",
+    "namePlaceholder": "Supplier name",
+    "email": "Email",
+    "phone": "Phone",
+    "country": "Country",
+    "address": "Address",
+    "noSuppliers": "No suppliers yet. Click \"Add Supplier\" to get started.",
+    "createdSuccess": "Supplier created successfully"
   },
   "warehouses": {
     "title": "Warehouses",
-    "description": "Manage storage locations"
+    "description": "Manage storage locations",
+    "addWarehouse": "Add Warehouse",
+    "newWarehouse": "New Warehouse",
+    "createWarehouse": "Create Warehouse",
+    "name": "Name",
+    "namePlaceholder": "Main Warehouse",
+    "location": "Location",
+    "locationPlaceholder": "Cairo, Egypt",
+    "description": "Description",
+    "noWarehouses": "No warehouses yet. Click \"Add Warehouse\" to get started.",
+    "createdSuccess": "Warehouse created successfully"
   },
   "purchaseOrders": {
     "title": "Purchase Orders",
     "description": "Manage purchase orders",
-    "newOrder": "New Order"
+    "newOrder": "New Order",
+    "newPurchaseOrder": "New Purchase Order",
+    "createOrder": "Create Order",
+    "orderNumber": "Order #",
+    "orderNumberLabel": "Order Number",
+    "orderNumberPlaceholder": "PO-001",
+    "supplier": "Supplier",
+    "selectSupplier": "Select supplier...",
+    "date": "Date",
+    "status": "Status",
+    "total": "Total",
+    "noOrders": "No purchase orders yet.",
+    "createdSuccess": "Purchase order created",
+    "statuses": {
+      "received": "Received",
+      "ordered": "Ordered",
+      "draft": "Draft",
+      "cancelled": "Cancelled"
+    }
   },
   "americanJournal": {
     "title": "American Journal",
@@ -243,6 +358,8 @@
     "companyName": "Company Name",
     "fiscalYear": "Fiscal Year",
     "currency": "Currency",
+    "currencyValue": "Egyptian Pound (EGP)",
+    "fiscalYearValue": "January - December",
     "system": "System",
     "systemInfo": "Database and authentication powered by Lovable Cloud.",
     "appearance": "Appearance",
@@ -263,6 +380,7 @@
     "clear": "Clear",
     "noResults": "No results found.",
     "loading": "Loading...",
+    "saving": "Saving...",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -275,6 +393,13 @@
     "overdue": "Overdue",
     "draft": "Draft",
     "posted": "Posted",
-    "completed": "Completed"
+    "completed": "Completed",
+    "dash": "—",
+    "required": "*"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Oops! Page not found",
+    "returnHome": "Return to Home"
   }
 }

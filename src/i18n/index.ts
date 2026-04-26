@@ -17,4 +17,15 @@ i18n
     },
   });
 
+const applyDir = (lng: string) => {
+  const isAr = lng?.startsWith('ar');
+  if (typeof document !== 'undefined') {
+    document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+    document.documentElement.lang = isAr ? 'ar' : 'en';
+  }
+};
+
+applyDir(i18n.language);
+i18n.on('languageChanged', applyDir);
+
 export default i18n;

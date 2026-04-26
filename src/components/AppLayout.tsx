@@ -13,8 +13,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const toggleLanguage = () => {
     const newLang = i18n.language === "ar" ? "en" : "ar";
     i18n.changeLanguage(newLang);
-    document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = newLang;
   };
 
   return (
@@ -25,8 +23,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <header className="h-14 flex items-center border-b bg-card px-3 sm:px-4 gap-2 shrink-0 z-20">
             <SidebarTrigger />
             <div className="flex-1" />
-            <Button variant="ghost" size="icon" onClick={toggleLanguage} className="h-8 w-8 shrink-0">
+            <Button variant="ghost" size="sm" onClick={toggleLanguage} className="h-8 px-2 shrink-0 gap-1 text-xs font-semibold" aria-label="Toggle language">
               <Languages className="h-4 w-4" />
+              <span>{isRTL ? "EN" : "AR"}</span>
             </Button>
             <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-8 w-8 shrink-0">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
