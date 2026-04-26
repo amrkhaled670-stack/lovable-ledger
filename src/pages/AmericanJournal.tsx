@@ -150,16 +150,14 @@ export default function AmericanJournal() {
                     </th>
                   </tr>
                   <tr className="bg-muted/30">
-                    {accounts.map((a) => (
-                      <>
-                        <th key={`${a.id}-d`} className="border-b border-r p-1.5 text-right font-medium text-success/80 text-[10px] uppercase">
-                          {t("americanJournal.debit")}
-                        </th>
-                        <th key={`${a.id}-c`} className="border-b border-r p-1.5 text-right font-medium text-destructive/80 text-[10px] uppercase">
-                          {t("americanJournal.credit")}
-                        </th>
-                      </>
-                    ))}
+                    {accounts.flatMap((a) => [
+                      <th key={`${a.id}-d`} className="border-b border-r p-1.5 text-right font-medium text-success/80 text-[10px] uppercase">
+                        {t("americanJournal.debit")}
+                      </th>,
+                      <th key={`${a.id}-c`} className="border-b border-r p-1.5 text-right font-medium text-destructive/80 text-[10px] uppercase">
+                        {t("americanJournal.credit")}
+                      </th>,
+                    ])}
                     <th className="border-b border-r p-1.5 text-right font-medium text-success/80 text-[10px] uppercase">{t("americanJournal.debit")}</th>
                     <th className="border-b border-r p-1.5 text-right font-medium text-destructive/80 text-[10px] uppercase">{t("americanJournal.credit")}</th>
                   </tr>
@@ -191,30 +189,28 @@ export default function AmericanJournal() {
                         <td className="border-b border-r p-2 text-foreground/80">
                           {entry.description || "—"}
                         </td>
-                        {accounts.map((a) => {
+                        {accounts.flatMap((a) => {
                           const cell = cells.get(a.id) ?? { debit: 0, credit: 0 };
-                          return (
-                            <>
-                              <td
-                                key={`${entry.id}-${a.id}-d`}
-                                className={cn(
-                                  "border-b border-r p-2 text-right font-mono text-[11px]",
-                                  cell.debit > 0 && "text-success font-semibold bg-success/5"
-                                )}
-                              >
-                                {formatCell(cell.debit)}
-                              </td>
-                              <td
-                                key={`${entry.id}-${a.id}-c`}
-                                className={cn(
-                                  "border-b border-r p-2 text-right font-mono text-[11px]",
-                                  cell.credit > 0 && "text-destructive font-semibold bg-destructive/5"
-                                )}
-                              >
-                                {formatCell(cell.credit)}
-                              </td>
-                            </>
-                          );
+                          return [
+                            <td
+                              key={`${entry.id}-${a.id}-d`}
+                              className={cn(
+                                "border-b border-r p-2 text-right font-mono text-[11px]",
+                                cell.debit > 0 && "text-success font-semibold bg-success/5"
+                              )}
+                            >
+                              {formatCell(cell.debit)}
+                            </td>,
+                            <td
+                              key={`${entry.id}-${a.id}-c`}
+                              className={cn(
+                                "border-b border-r p-2 text-right font-mono text-[11px]",
+                                cell.credit > 0 && "text-destructive font-semibold bg-destructive/5"
+                              )}
+                            >
+                              {formatCell(cell.credit)}
+                            </td>,
+                          ];
                         })}
                         <td className="border-b border-r p-2 text-right font-mono text-[11px] font-semibold bg-accent/5">
                           {formatCell(rowDebit)}
@@ -232,18 +228,16 @@ export default function AmericanJournal() {
                       <td colSpan={3} className="sticky left-0 bg-primary/10 z-10 border-t border-r p-2 text-right uppercase text-[11px] tracking-wide">
                         {t("americanJournal.totals")}
                       </td>
-                      {accounts.map((a) => {
+                      {accounts.flatMap((a) => {
                         const ct = columnTotals.get(a.id) ?? { debit: 0, credit: 0 };
-                        return (
-                          <>
-                            <td key={`tot-${a.id}-d`} className="border-t border-r p-2 text-right font-mono text-[11px] text-success">
-                              {formatCell(ct.debit)}
-                            </td>
-                            <td key={`tot-${a.id}-c`} className="border-t border-r p-2 text-right font-mono text-[11px] text-destructive">
-                              {formatCell(ct.credit)}
-                            </td>
-                          </>
-                        );
+                        return [
+                          <td key={`tot-${a.id}-d`} className="border-t border-r p-2 text-right font-mono text-[11px] text-success">
+                            {formatCell(ct.debit)}
+                          </td>,
+                          <td key={`tot-${a.id}-c`} className="border-t border-r p-2 text-right font-mono text-[11px] text-destructive">
+                            {formatCell(ct.credit)}
+                          </td>,
+                        ];
                       })}
                       <td className="border-t border-r p-2 text-right font-mono text-[11px] text-success">{formatCurrency(grandDebit)}</td>
                       <td className="border-t border-r p-2 text-right font-mono text-[11px] text-destructive">{formatCurrency(grandCredit)}</td>
