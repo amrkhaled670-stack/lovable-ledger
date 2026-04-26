@@ -70,7 +70,7 @@ export default function Analytics() {
               </CardHeader>
               <CardContent>
                 {expenseData.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">No expense data yet</p>
+                  <p className="text-center text-muted-foreground py-8">{t("analyticsPage.noExpenseData")}</p>
                 ) : (
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
@@ -90,7 +90,7 @@ export default function Analytics() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Summary</CardTitle>
+                <CardTitle className="text-base">{t("analyticsPage.summary")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between py-2">

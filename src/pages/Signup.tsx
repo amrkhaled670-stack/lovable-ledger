@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Landmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Signup() {
@@ -25,7 +24,7 @@ export default function Signup() {
     const { error } = await signUp(email, password, { full_name: fullName, company_name: companyName });
     setLoading(false);
     if (error) {
-      toast({ variant: "destructive", title: "Error", description: t("auth.signupError") });
+      toast({ variant: "destructive", title: t("auth.errorTitle"), description: t("auth.signupError") });
     } else {
       toast({ title: t("auth.checkEmail") });
     }
@@ -35,8 +34,8 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
-          <div className="mx-auto h-12 w-12 rounded-xl bg-primary flex items-center justify-center mb-2">
-            <Landmark className="h-6 w-6 text-primary-foreground" />
+          <div className="mx-auto h-14 w-14 rounded-xl bg-white ring-1 ring-border flex items-center justify-center mb-2 overflow-hidden">
+            <img src="/phoenix-logo.png" alt="Phoenix" className="h-12 w-12 object-contain" width={56} height={56} />
           </div>
           <CardTitle className="text-xl">{t("auth.signupTitle")}</CardTitle>
           <CardDescription>{t("auth.signupSubtitle")}</CardDescription>
