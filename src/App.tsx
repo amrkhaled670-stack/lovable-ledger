@@ -13,6 +13,7 @@ import GeneralLedger from "./pages/GeneralLedger";
 import TrialBalance from "./pages/TrialBalance";
 import IncomeStatement from "./pages/IncomeStatement";
 import BalanceSheet from "./pages/BalanceSheet";
+import AmericanJournal from "./pages/AmericanJournal";
 import Invoices from "./pages/Invoices";
 import Payments from "./pages/Payments";
 import Customers from "./pages/Customers";
@@ -53,6 +54,7 @@ const App = () => (
               <Route path="/trial-balance" element={<ProtectedApp><TrialBalance /></ProtectedApp>} />
               <Route path="/income-statement" element={<ProtectedApp><IncomeStatement /></ProtectedApp>} />
               <Route path="/balance-sheet" element={<ProtectedApp><BalanceSheet /></ProtectedApp>} />
+              <Route path="/american-journal" element={<ProtectedApp><AmericanJournal /></ProtectedApp>} />
               <Route path="/invoices" element={<ProtectedApp><Invoices /></ProtectedApp>} />
               <Route path="/payments" element={<ProtectedApp><Payments /></ProtectedApp>} />
               <Route path="/customers" element={<ProtectedApp><Customers /></ProtectedApp>} />
