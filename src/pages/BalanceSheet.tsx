@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatCurrency } from "@/lib/currency";
+import { useTranslation } from "react-i18next";
 
 function LineItem({ label, amount, bold = false, indent = false }: { label: string; amount: number; bold?: boolean; indent?: boolean }) {
   return (
@@ -19,6 +20,7 @@ function LineItem({ label, amount, bold = false, indent = false }: { label: stri
 }
 
 export default function BalanceSheet() {
+  const { t } = useTranslation();
   const { user } = useAuth();
 
   const { data: accounts = [], isLoading } = useQuery({
@@ -41,40 +43,40 @@ export default function BalanceSheet() {
 
   return (
     <AppLayout>
-      <PageHeader title="Balance Sheet" description="Assets, liabilities and equity" />
+      <PageHeader title={t("balanceSheet.title")} description={t("balanceSheet.description")} />
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-2xl">
         {isLoading ? <Skeleton className="h-64 rounded-xl" /> : (
           <Card>
             <CardHeader className="text-center border-b">
-              <CardTitle className="text-lg">Balance Sheet</CardTitle>
+              <CardTitle className="text-lg">{t("balanceSheet.title")}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 space-y-6">
               <div>
-                <h3 className="text-xs uppercase tracking-widest font-semibold text-muted-foreground mb-2">Assets</h3>
+                <h3 className="text-xs uppercase tracking-widest font-semibold text-muted-foreground mb-2">{t("balanceSheet.assets")}</h3>
                 {assetAccounts.length === 0 ? (
-                  <p className="text-sm text-muted-foreground py-2">No asset accounts</p>
+                  <p className="text-sm text-muted-foreground py-2">{t("balanceSheet.noAssets")}</p>
                 ) : assetAccounts.map((a) => <LineItem key={a.name} label={a.name} amount={a.balance ?? 0} indent />)}
                 <Separator className="my-2" />
-                <LineItem label="Total Assets" amount={totalAssets} bold />
+                <LineItem label={t("balanceSheet.totalAssets")} amount={totalAssets} bold />
               </div>
               <div>
-                <h3 className="text-xs uppercase tracking-widest font-semibold text-muted-foreground mb-2">Liabilities</h3>
+                <h3 className="text-xs uppercase tracking-widest font-semibold text-muted-foreground mb-2">{t("balanceSheet.liabilities")}</h3>
                 {liabilityAccounts.length === 0 ? (
-                  <p className="text-sm text-muted-foreground py-2">No liability accounts</p>
+                  <p className="text-sm text-muted-foreground py-2">{t("balanceSheet.noLiabilities")}</p>
                 ) : liabilityAccounts.map((l) => <LineItem key={l.name} label={l.name} amount={l.balance ?? 0} indent />)}
                 <Separator className="my-2" />
-                <LineItem label="Total Liabilities" amount={totalLiabilities} bold />
+                <LineItem label={t("balanceSheet.totalLiabilities")} amount={totalLiabilities} bold />
               </div>
               <div>
-                <h3 className="text-xs uppercase tracking-widest font-semibold text-muted-foreground mb-2">Equity</h3>
+                <h3 className="text-xs uppercase tracking-widest font-semibold text-muted-foreground mb-2">{t("balanceSheet.equity")}</h3>
                 {equityAccounts.length === 0 ? (
-                  <p className="text-sm text-muted-foreground py-2">No equity accounts</p>
+                  <p className="text-sm text-muted-foreground py-2">{t("balanceSheet.noEquity")}</p>
                 ) : equityAccounts.map((e) => <LineItem key={e.name} label={e.name} amount={e.balance ?? 0} indent />)}
                 <Separator className="my-2" />
-                <LineItem label="Total Equity" amount={totalEquity} bold />
+                <LineItem label={t("balanceSheet.totalEquity")} amount={totalEquity} bold />
               </div>
               <Separator />
-              <LineItem label="Total Liabilities & Equity" amount={totalLiabilities + totalEquity} bold />
+              <LineItem label={t("balanceSheet.totalLiabilitiesEquity")} amount={totalLiabilities + totalEquity} bold />
             </CardContent>
           </Card>
         )}
